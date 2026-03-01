@@ -4,7 +4,8 @@ const employeeSchema = new mongoose.Schema({
     FirstName:{
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        lowercase: true
     },
     LastName:{
         type: String,

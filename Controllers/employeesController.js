@@ -112,7 +112,58 @@ const updateEmployee = async (req, res) => {
   }
 };
 
-// const EmployeeStatus
+const EmployeeStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Status } = req.body;
 
+    if (!id) {
+      return res.status(400).json({ msg: "Employee ID is required" });
+    }
 
-module.exports = {addemployee, getemployee, getemployeeById, deleteEmployee, updateEmployee}
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "Invalid ID format" });
+    }
+
+    const allowedStatus = ["Active", "Diactive"];
+
+    if (!Status || !allowedStatus.includes(Status)) {
+      return res.status(400).json({
+        message: "Status must be 'Active' or 'Diactive'"
+      });
+    }
+
+    const Employee = await Employees.findByIdAndUpdate(id,{ Status },{new: true});
+
+    if (!Employee) {
+      return res.status(404).json({ msg: "Employee not found" });
+    }
+
+    res.status(200).json({
+      msg: `Employee ${Status === "Diactive" ? "activated" : "deactivated"} successfully`,
+      employee: Employee
+    });
+
+  } catch (error) {
+    res.status(500).json({msg: "Server Error",error: error.message});
+  }
+};
+
+const searchEmployee = async (req, res) => {
+  try {
+    const { FirstName } = req.query;
+
+    if (!FirstName) {
+      return res.status(400).json({ msg: "First Name is required"});
+    }
+
+    const employees = await Employees.find({FirstName: { $regex: FirstName, $options: "i" }});
+
+    res.status(200).json({count: employees.length,employees});
+
+  } catch (error) {
+    res.status(500).json({msg: "Server Error",error: error.message});
+  }
+};
+
+module.exports = {addemployee, getemployee, getemployeeById, deleteEmployee, updateEmployee, EmployeeStatus, searchEmployee}

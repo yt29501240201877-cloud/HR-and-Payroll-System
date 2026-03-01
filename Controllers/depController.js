@@ -1,9 +1,10 @@
 const Department = require("../Models/Departement")
+const Employee = require("../Models/Employees")
 const mongoose = require('mongoose');
 
 const adddepartment = async (req,res) => {
     try {
-        const {DepartmentName,Description} = req.body;
+        const {DepartmentName,Description,Employees} = req.body;
         if (!DepartmentName) {
             return res.status(400).json({msg:"Missing Data"})
         }
@@ -11,10 +12,10 @@ const adddepartment = async (req,res) => {
         if (existDep) {
             return res.status(400).json({msg:"Department aleardy exist"});
         }
-        const dep = await Department.create({DepartmentName,Description})
+        const dep = await Department.create({DepartmentName,Description,Employees:req.body.Employees})
         res.status(201).json({msg:"Department Created Successfully", dep})
     } catch (error) {
-        console.log(error); 
+        res.status(500).json({ msg: "Server Error", error: error.message });
     }
 }
 
@@ -23,8 +24,7 @@ const getdepartment = async (req,res) => {
         const dep = await Department.find();
         res.status(200).json({msg:"All Department Retrived", dep})
     } catch (error) {
-        console.log(error);
-        
+        res.status(500).json({ msg: "Server Error", error: error.message }); 
     }
 }
 
@@ -111,4 +111,31 @@ const updateDepartment = async (req, res) => {
   }
 };
 
-module.exports = {adddepartment, getdepartment, getdepartmentById, deleteDepartment, updateDepartment}
+const getdep_empById = async (req, res) => {
+    try {
+
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ msg: "ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ msg: "Invalid ID" });
+    }
+
+    const data = await Department.findById(id).populate("Employees");
+
+    if (!data) {
+      return res.status(404).json({ msg: "Department not found" });
+    }
+
+    res.status(200).json(data);
+
+  } catch (error) {
+    res.status(500).json({ msg: "Server Error", error: error.message });
+  }
+
+}
+
+module.exports = {adddepartment, getdepartment, getdepartmentById, deleteDepartment, updateDepartment, getdep_empById}

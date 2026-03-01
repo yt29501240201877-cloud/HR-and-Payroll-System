@@ -22,9 +22,10 @@ async function dbconnest() {
 dbconnest();
 
 const DepRoute = require('./Routes/depRoute');
-
+const employeeRoute = require('./Routes/employeesRoute');
 
 app.use('/departments',DepRoute);
+app.use('/employees',employeeRoute);
 
 
 app.listen(PORT,()=>{

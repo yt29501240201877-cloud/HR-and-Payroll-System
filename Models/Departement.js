@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { type } = require("node:os");
 
 const depSchema = new mongoose.Schema({
     DepartmentName:{
@@ -9,7 +8,12 @@ const depSchema = new mongoose.Schema({
     },
     Description:{
         type: String,
-    }
+    },
+    Employees:[{
+        type:mongoose.Schema.ObjectId,
+        ref:'Employees',
+        required: true
+    }]
 },{timestamps: true})
 
 const Department = mongoose.model("Department", depSchema);

@@ -32,11 +32,6 @@ const employeeSchema = new mongoose.Schema({
     BasicSalary:{
         type: Number,
         min: 0
-    },
-    Department:{
-        type: mongoose.Schema.ObjectId,
-        ref: 'Department',
-        required: true
     }
 },{timestamps: true});
 

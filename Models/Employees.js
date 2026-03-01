@@ -32,6 +32,11 @@ const employeeSchema = new mongoose.Schema({
     BasicSalary:{
         type: Number,
         min: 0
+    },
+    Status:{
+        type: String,
+        enum: ["Active","Diactive"],
+        default: "Active"
     }
 },{timestamps: true});
 

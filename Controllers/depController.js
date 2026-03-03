@@ -1,22 +1,24 @@
 const Department = require("../Models/Departement")
 const Employee = require("../Models/Employees")
 const mongoose = require('mongoose');
+const JWT = require("jsonwebtoken")
 
 const adddepartment = async (req,res) => {
-    try {
-        const {DepartmentName,Description,Employees} = req.body;
-        if (!DepartmentName) {
-            return res.status(400).json({msg:"Missing Data"})
-        }
-        const existDep = await Department.findOne({DepartmentName});
-        if (existDep) {
-            return res.status(400).json({msg:"Department aleardy exist"});
-        }
-        const dep = await Department.create({DepartmentName,Description,Employees:req.body.Employees})
-        res.status(201).json({msg:"Department Created Successfully", dep})
-    } catch (error) {
-        res.status(500).json({ msg: "Server Error", error: error.message });
-    }
+  try {
+    const {DepartmentName,Description,Employees} = req.body;
+
+    if (!DepartmentName) return res.status(400).json({msg:"Missing Data"})
+
+    const existDep = await Department.findOne({DepartmentName});
+
+    if (existDep) return res.status(400).json({msg:"Department aleardy exist"});
+
+    const dep = await Department.create({DepartmentName,Description,Employees:req.body.Employees})
+
+    res.status(201).json({msg:"Department Created Successfully", dep})
+  } catch (error) {
+      res.status(500).json({ msg: "Server Error", error: error.message });
+  }
 }
 
 const getdepartment = async (req,res) => {

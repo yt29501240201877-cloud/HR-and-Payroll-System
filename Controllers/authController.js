@@ -43,9 +43,17 @@ const login = async (req, res) => {
 
     res.status(200).json({msg: "Success Login", token})
 
+    user.token = token
+    
+    await user.save();
+
     } catch (error) {
         res.status(500).json({msg: "Server Error", error: error.message});
     }
+}
+
+const logout = async (req, res) => {
+    
 }
 
 module.exports = {register, login}

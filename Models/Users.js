@@ -13,7 +13,11 @@ const userSchema = new mongoose.Schema({
     },
     Role:{
         type:String,
-        enum: ["Admin","HR Manager","Accountant"]
+        enum: ["Admin","HR Manager","Accountant","Employee"]
+    },
+    token:{
+        type: String,
+        required: true
     },
     Employee:{
         type: mongoose.Schema.ObjectId,

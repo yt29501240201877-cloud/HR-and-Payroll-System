@@ -9,7 +9,7 @@ const depSchema = new mongoose.Schema({
     Description:{
         type: String,
     },
-    Employees:[{
+    Employee:[{
         type:mongoose.Schema.ObjectId,
         ref:'Employees',
         required: true

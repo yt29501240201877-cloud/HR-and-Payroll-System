@@ -7,8 +7,8 @@ const { adddepartment, getdepartment, getdepartmentById, deleteDepartment, updat
 
 router.post("/", adddepartment)
 router.get("/", getdepartment)
-router.get("/:id", getdepartmentById)
 router.get("/:id/employees", getdep_empById)
+router.get("/:id", getdepartmentById)
 router.delete("/:id", deleteDepartment)
 router.put("/:id", updateDepartment)
 

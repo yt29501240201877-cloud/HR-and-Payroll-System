@@ -5,7 +5,7 @@ const JWT = require("jsonwebtoken")
 
 const adddepartment = async (req,res) => {
   try {
-    const {DepartmentName,Description,Employees} = req.body;
+    const {DepartmentName,Description,Employee} = req.body;
 
     if (!DepartmentName) return res.status(400).json({msg:"Missing Data"})
 
@@ -13,7 +13,7 @@ const adddepartment = async (req,res) => {
 
     if (existDep) return res.status(400).json({msg:"Department aleardy exist"});
 
-    const dep = await Department.create({DepartmentName,Description,Employees:req.body.Employees})
+    const dep = await Department.create({DepartmentName,Description,Employee:req.body.Employee})
 
     res.status(201).json({msg:"Department Created Successfully", dep})
   } catch (error) {
@@ -24,6 +24,7 @@ const adddepartment = async (req,res) => {
 const getdepartment = async (req,res) => {
     try {
         const dep = await Department.find();
+        
         res.status(200).json({msg:"All Department Retrived", dep})
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message }); 
@@ -126,7 +127,7 @@ const getdep_empById = async (req, res) => {
       return res.status(400).json({ msg: "Invalid ID" });
     }
 
-    const data = await Department.findById(id).populate("Employees");
+    const data = await Department.findById(id).populate('Employee');
 
     if (!data) {
       return res.status(404).json({ msg: "Department not found" });
@@ -137,7 +138,6 @@ const getdep_empById = async (req, res) => {
   } catch (error) {
     res.status(500).json({ msg: "Server Error", error: error.message });
   }
-
 }
 
 module.exports = {adddepartment, getdepartment, getdepartmentById, deleteDepartment, updateDepartment, getdep_empById}

@@ -7,10 +7,7 @@ const userSchema = require("./Validation/userValidation")
 const register = async (req, res) => {
     try {
 
-        const {error, value} = userSchema.validate(req.body, {
-        abortEarly: false,
-        stripUnknown: true
-        })
+        const {error, value} = userSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
 
         const {Username, PasswordHash, Role, Employee} = req.body
         
@@ -87,8 +84,8 @@ const getme = async (req, res) => {
    try {
         const userId = req.user.id;
 
-        const user = await Users.findById(userId).populate(Employees).select("PasswordHash")
-
+        const user = await Users.findById(userId).populate("Employee")
+        
         if(!user) return res.status(404).json({msg: "Not Found"})
 
         res.json({msg: "Current User", user})

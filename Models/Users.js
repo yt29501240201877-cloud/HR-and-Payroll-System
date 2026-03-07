@@ -16,13 +16,13 @@ const userSchema = new mongoose.Schema({
         enum: ["Admin","HR Manager","Accountant","Employee"]
     },
     token:{
-        type: String,
-        required: true
+        type: String
     },
     Employee:{
         type: mongoose.Schema.ObjectId,
         ref: 'Employees',
-        required: true
+        required: true,
+        unique: true
     }
 },{timestamps: true});
 

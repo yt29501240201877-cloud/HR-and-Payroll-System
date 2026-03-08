@@ -2,7 +2,7 @@ const Employees = require("../Models/Employees")
 const Users = require("../Models/Users")
 const bcrypt = require("bcrypt")
 const JWT = require("jsonwebtoken")
-const userSchema = require("./Validation/userValidation")
+const userSchema = require("./Validation/Validation")
 
 const register = async (req, res) => {
     try {

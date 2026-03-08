@@ -6,4 +6,4 @@ const userSchema = joi.object({
     Role: joi.string().validate("Admin","HR Manager","Accountant","Employee"),
 });
 
-module.exports = userSchema;
+module.exports = {userSchema};

@@ -1,28 +1,28 @@
 const mongoose = require('mongoose');
 const Users = require("../Models/Users")
 const JWT = require("jsonwebtoken")
-const userSchema = require("./Validation/userValidation")
+const userSchema = require("./Validation/Validation")
 
 
 const updaterole = async (req,res) => {
     try {
 
-        const {error, value} = userSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+      const {error, value} = userSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
 
-        const { id } = req.params;
-        const { Role } = req.body;
+      const { id } = req.params;
+      const { Role } = req.body;
 
-        if (!id) {
-        return res.status(400).json({ msg: "User ID is required" });
-        }
+      if (!id) {
+       return res.status(400).json({ msg: "User ID is required" });
+      }
 
-        const user = await Users.findByIdAndUpdate(id,{ Role },{new: true});
+      const user = await Users.findByIdAndUpdate(id,{ Role },{new: true});
 
-        if (!user) {
-        return res.status(404).json({ msg: "User not found" });
-        }
+      if (!user) {
+       return res.status(404).json({ msg: "User not found" });
+      }
 
-        res.status(200).json({msg: "Role Updated successfully", Users: user});
+      res.status(200).json({msg: "Role Updated successfully", Users: user});
 
     } catch (error) {
         res.status(500).json({msg: "Server Error",error: error.message}) 

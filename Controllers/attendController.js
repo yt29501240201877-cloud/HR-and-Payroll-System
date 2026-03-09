@@ -3,7 +3,7 @@ const Attendance = require("../Models/Attendance")
 
 const checkin = async (req, res) => {
     try {
-       const { Id } = req.body;
+       const { Id, Status } = req.body;
 
         if (!Id) return res.status(400).json({ msg: "Employee ID required" });
 
@@ -13,8 +13,8 @@ const checkin = async (req, res) => {
         const CheckedEmp = await Attendance.findOne({ Employee: Id, Date: { $gte: today }});
 
         if (CheckedEmp) return res.status(400).json({ msg: "Employee already checked in today" });
-
-        const attendance = await Attendance.create({Employee: Id, CheckInTime: new Date(), Date: new Date()});
+            
+        const attendance = await Attendance.create({Employee: Id, CheckInTime: new Date(), Date: new Date(), Status});
 
         res.status(201).json({ msg: "Check-in successful", attendance });
 
@@ -77,5 +77,44 @@ const getemprecords = async (req, res) => {
     }
 }
 
+const updateattend = async (req, res) => {
+    try {
+        const { id } = req.params
+        const updateData = req.body
 
-module.exports = {checkin, checkout, getallrecords, getemprecords}
+       if (!id) return res.status(400).json({ msg: "ID is required" });
+
+       if (!mongoose.Types.ObjectId.isValid(id)) return res.status(400).json({ msg: "Invalid Data" });
+
+       if (!Object.keys(updateData).length) return res.status(400).json({ msg: "No data provided for update" });
+
+       const updatedItem = await Attendance.findByIdAndUpdate(id,updateData,{new: true});
+
+       if (!updatedItem) return res.status(404).json({ msg: "Employee not found" });
+
+       res.status(200).json({msg: "Status Updated Successfully", updatedItem})
+
+    } catch (error) {
+        res.status(500).json({msg: "Server Error",error: error.message})
+    }
+}
+
+const attendreport = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        if (!id) return res.status(400).json({ msg: "ID is required" });
+
+        const data = await Department.findById(id);
+
+        if (!data) return res.status(404).json({ msg: "Data not found" });
+
+        res.status(200).json({msg: "Report Retrived Successfully", data})
+    } catch (error) {
+        res.status(500).json({msg: "Server Error",error: error.message})
+    }
+    
+}
+
+module.exports = {checkin, checkout, getallrecords, getemprecords, updateattend, attendreport}
+

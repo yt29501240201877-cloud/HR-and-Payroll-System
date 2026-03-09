@@ -1,3 +1,4 @@
+const { required } = require("joi")
 const mongoose = require("mongoose")
 
 const attendSchema = new mongoose.Schema({
@@ -11,6 +12,17 @@ const attendSchema = new mongoose.Schema({
     },
     CheckOutTime:{
         type: Date
+    },
+    Status: {
+        type: String,
+        enum: ["Attend", "Absent", "Execu"],
+        required: true
+    },
+    WorkingHours:{
+        type: Date,
+    },
+    LateHours:{
+        type: Date,
     },
     OvertimeHours:{
         type: Date

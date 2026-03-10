@@ -25,11 +25,13 @@ const DepRoute = require('./Routes/depRoute');
 const employeeRoute = require('./Routes/employeesRoute');
 const usersRoute = require('./Routes/usersRoute');
 const attendRoute = require("./Routes/attendRoute")
+const leaveRoute = require("./Routes/leavestypeRoute")
 
 app.use('/departments',DepRoute);
 app.use('/employees',employeeRoute);
 app.use('/users',usersRoute);
 app.use('/attendance',attendRoute);
+app.use('/leaves', leaveRoute);
 
 
 app.listen(PORT,()=>{

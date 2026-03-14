@@ -1,29 +1,29 @@
 const mongoose = require("mongoose")
-const Allowance = require("../Models/Allowances")
+const Deduction = require("../Models/Deduction")
 const Employees = require("../Models/Employees")
-const {allowSchema} = require("./Validation/allowValidation")
+const {deducSchema} = require("./Validation/deductionValidation")
 
-const getempallow = async (req, res) => {
+const getempdeduc = async (req, res) => {
     try {
         const {id} = req.params
 
         if(!id) return res.status(400).json({msg: "ID is required"})
 
-        const record = await Allowance.find({Employee : id})
+        const record = await Deduction.find({Employee : id})
 
-        if(!record) return res.status(404).json({msg: "Allowances not Found"})
+        if(!record) return res.status(404).json({msg: "Deductions not Found"})
 
-        res.status(200).json({msg: "Employee Allowances Retrieved", record})
+        res.status(200).json({msg: "Employee Deductions Retrieved", record})
 
     } catch (error) {
         res.status(500).json({msg: "Server Error",error: error.message})
     }
 }
 
-const applyforallow = async (req, res) => {
+const applyfordeduc = async (req, res) => {
      try {
 
-        const {error, value} = allowSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+        const {error, value} = deducSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
 
         const {Employee, Name, Amount, IsRecurring} = value;
 
@@ -35,27 +35,27 @@ const applyforallow = async (req, res) => {
 
         if(!existemp) return res.status(400).json({msg: "Employee isn't exist"})
 
-        const allow = await Allowance.create({Amount, IsRecurring, Name, Employee})
+        const allow = await Deduction.create({Amount, IsRecurring, Name, Employee})
 
-        res.status(201).json({msg: "Allowance Created Successfully", data: allow})
+        res.status(201).json({msg: "Deduction Created Successfully", data: allow})
 
     } catch (error) {
         res.status(500).json({msg: "Server Error", error: error.message});
     }
 }
 
-const updateallow = async (req, res) => {
+const updatededuc = async (req, res) => {
     try {
         const { id } = req.params
         const updateData = req.body;
 
         if (!Object.keys(updateData).length) return res.status(400).json({ msg: "No data provided for update" });
         
-        const updatedItem = await Allowance.findByIdAndUpdate(id,updateData,{new: true});
+        const updatedItem = await Deduction.findByIdAndUpdate(id,updateData,{new: true});
 
-        if (!updatedItem) return res.status(404).json({ msg: "Allowance not found" });
+        if (!updatedItem) return res.status(404).json({ msg: "Deduction not found" });
 
-        res.status(200).json({msg: "Allowance updated successfully",updatedItem});
+        res.status(200).json({msg: "Deduction updated successfully",updatedItem});
 
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });
@@ -68,11 +68,11 @@ const deletededuc = async (req,res) => {
 
     if (!id) return res.status(400).json({ msg: "ID is required" });
 
-    const deletedItem = await Allowance.findByIdAndDelete(id);
+    const deletedItem = await Deduction.findByIdAndDelete(id);
 
-    if (!deletedItem) return res.status(404).json({ msg: "Allowance not found" });
+    if (!deletedItem) return res.status(404).json({ msg: "Deduction not found" });
 
-    res.status(200).json({msg: "Allowance deleted successfully", deletedItem});
+    res.status(200).json({msg: "Deduction deleted successfully", deletedItem});
 
   } catch (error) {
     res.status(500).json({msg: "Server Error", error: error.message});
@@ -80,4 +80,4 @@ const deletededuc = async (req,res) => {
 }
 
 
-module.exports = {getempallow, applyforallow, updateallow, deletededuc}
+module.exports = {getempdeduc, applyfordeduc, updatededuc, deletededuc}

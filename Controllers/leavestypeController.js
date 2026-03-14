@@ -99,4 +99,57 @@ const getallEmpleave = async (req, res) => {
     }    
 }
 
-module.exports = {addleave, getleave, updateleave, deleteleave, applyforleave, getallEmpleave}
+const getempleaves = async (req, res) => {
+    try {
+        const {id} = req.params
+
+        if(!id) return res.status(400).json({msg: "ID is required"})
+
+        const record = await Leaves.find({Employee : id})
+
+        if(!record) return res.status(404).json({msg: "Records not Found"})
+
+        res.status(200).json({msg: "Employee Records Retrieved", record})
+
+    } catch (error) {
+        res.status(500).json({msg: "Server Error",error: error.message})
+    }
+}
+
+const approveleave = async (req, res) => {
+    try {
+        const { id } = req.params
+        const updateData = req.body;
+
+        if (!Object.keys(updateData).length) return res.status(400).json({ msg: "No data provided for update" });
+        
+        const updatedItem = await Leaves.findByIdAndUpdate(id,updateData,{new: true});
+
+        if (!updatedItem) return res.status(404).json({ msg: "Leave not found" });
+
+        res.status(200).json({msg: "Leave updated successfully",updatedItem});
+
+    } catch (error) {
+        res.status(500).json({ msg: "Server Error", error: error.message });
+    }
+}
+
+const rejectleave = async (req, res) => {
+    try {
+        const { id } = req.params
+        const updateData = req.body;
+
+        if (!Object.keys(updateData).length) return res.status(400).json({ msg: "No data provided for update" });
+        
+        const updatedItem = await Leaves.findByIdAndUpdate(id,updateData,{new: true});
+
+        if (!updatedItem) return res.status(404).json({ msg: "Leave not found" });
+
+        res.status(200).json({msg: "Leave updated successfully",updatedItem});
+
+    } catch (error) {
+        res.status(500).json({ msg: "Server Error", error: error.message });
+    }
+}
+
+module.exports = {addleave, getleave, updateleave, deleteleave, applyforleave, getallEmpleave, getempleaves, approveleave, rejectleave}

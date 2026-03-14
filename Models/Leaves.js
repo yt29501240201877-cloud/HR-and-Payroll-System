@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose")
 
 const leaveSchema = new mongoose.Schema({
@@ -8,6 +9,12 @@ const leaveSchema = new mongoose.Schema({
     IsRecurring: {
         type: Boolean,
         required: true
+    },
+    Status:{
+        type: String,
+        required: true,
+        enum: ["In Progress","Approved", "Rejected"],
+        default: "In Progress"
     },
     Type:{
         type: mongoose.Schema.ObjectId,

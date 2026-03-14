@@ -2,7 +2,7 @@ const Employees = require("../Models/Employees")
 const Users = require("../Models/Users")
 const bcrypt = require("bcrypt")
 const JWT = require("jsonwebtoken")
-const userSchema = require("./Validation/Validation")
+const userSchema = require("./Validation/authValidation")
 
 const register = async (req, res) => {
     try {
@@ -12,6 +12,10 @@ const register = async (req, res) => {
         const {Username, PasswordHash, Role, Employee} = req.body
         
         if(!Username || !PasswordHash || !Role || !Employee) return res.status(400).json({msg: "Invalid Data"})
+
+        // if(error){
+        //     return res.status(400).json({msg: error.details.map(err => err.message)})
+        // }
 
         const existemp = await Employees.findById(Employee)
         

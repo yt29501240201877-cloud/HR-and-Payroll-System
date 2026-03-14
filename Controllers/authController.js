@@ -2,20 +2,18 @@ const Employees = require("../Models/Employees")
 const Users = require("../Models/Users")
 const bcrypt = require("bcrypt")
 const JWT = require("jsonwebtoken")
-const userSchema = require("./Validation/authValidation")
+const {userSchema, loginSchema} = require("./Validation/authValidation")
 
 const register = async (req, res) => {
     try {
 
         const {error, value} = userSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
 
-        const {Username, PasswordHash, Role, Employee} = req.body
-        
-        if(!Username || !PasswordHash || !Role || !Employee) return res.status(400).json({msg: "Invalid Data"})
+        const {Username, PasswordHash, Role, Employee} = value
 
-        // if(error){
-        //     return res.status(400).json({msg: error.details.map(err => err.message)})
-        // }
+        if(error){
+            return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
         const existemp = await Employees.findById(Employee)
         
@@ -38,25 +36,30 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-    const {Username, PasswordHash} = req.body
 
-    if(!Username || !PasswordHash) return res.status(400).json({msg: "Invalid Data"})
+        const {error, value} = loginSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
 
-    const user = await Users.findOne({Username})
+        const {Username, PasswordHash} = value
 
-    if(!user) return res.status(400).json({msg: "Account isn't exist"})
+        if(error){
+            return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
-    const matchpass = await bcrypt.compare(PasswordHash, user.PasswordHash)
+        const user = await Users.findOne({Username})
 
-    if(!matchpass) return res.status(400).json({msg: "Invalid Password"})
+        if(!user) return res.status(400).json({msg: "Account isn't exist"})
 
-    const token = JWT.sign({id:user._id, role: user.Role}, process.env.JWT_SECRET, {expiresIn: "1d"})
+        const matchpass = await bcrypt.compare(PasswordHash, user.PasswordHash)
 
-    res.status(200).json({msg: "Success Login", token})
+        if(!matchpass) return res.status(400).json({msg: "Invalid Password"})
 
-    user.token = token
-    
-    await user.save();
+        const token = JWT.sign({id:user._id, role: user.Role}, process.env.JWT_SECRET, {expiresIn: "1d"})
+
+        res.status(200).json({msg: "Success Login", token})
+
+        user.token = token
+        
+        await user.save();
 
     } catch (error) {
         res.status(500).json({msg: "Server Error", error: error.message});

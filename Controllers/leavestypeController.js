@@ -2,12 +2,18 @@ const LeavesType = require("../Models/LeavesType")
 const Leaves = require("../Models/Leaves")
 const Employees = require("../Models/Employees")
 const mongoose = require("mongoose")
+const {leavetypeSchema, leaveSchema} = require("./Validation/leaveValidation")
 
 const addleave = async (req, res) => {
     try {
-        const {TypeName, MaxDaysPerYear} = req.body
 
-        if(!TypeName || !MaxDaysPerYear) return res.status(400).json({msg: "Missing Data"});
+        const {error, value} = leavetypeSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+        const {TypeName, MaxDaysPerYear} = value
+
+        if(error){
+            return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
         const leaves = await LeavesType.create({TypeName, MaxDaysPerYear})
 
@@ -67,9 +73,13 @@ const deleteleave = async (req,res) => {
 const applyforleave = async (req, res) => {
      try {
 
-        const {Employee, Type, Amount, IsRecurring} = req.body
-        
-        if(!Employee || !Type || !Amount || !IsRecurring) return res.status(400).json({msg: "Invalid Data"})
+        const {error, value} = leaveSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+        const {Employee, Type, Amount, IsRecurring} = value
+
+        if(error){
+            return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
         const existemp = await Employees.findById(Employee)
 

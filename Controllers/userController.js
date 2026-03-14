@@ -7,8 +7,6 @@ const userSchema = require("./Validation/authValidation")
 const updaterole = async (req,res) => {
     try {
 
-      const {error, value} = userSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
-
       const { id } = req.params;
       const { Role } = req.body;
 

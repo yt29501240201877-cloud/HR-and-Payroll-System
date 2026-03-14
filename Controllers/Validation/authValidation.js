@@ -2,10 +2,15 @@ const joi = require("joi");
 
 
 const userSchema = joi.object({
-    Username: joi.string().min(8).max(20).required(),
+    Username: joi.string().min(4).max(20).required(),
     PasswordHash: joi.string().min(8).max(20).required(),
     Employee: joi.string().required(),
-    Role: joi.string().validate("Admin","HR Manager","Accountant","Employee"),
+    Role: joi.string().valid("Admin","HR Manager","Accountant","Employee").required(),
 });
 
-module.exports = {userSchema};
+const loginSchema = joi.object({
+    Username: joi.string().min(4).max(20).required(),
+    PasswordHash: joi.string().min(8).max(20).required(),
+});
+
+module.exports = {userSchema, loginSchema};

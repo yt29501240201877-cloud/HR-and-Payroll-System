@@ -13,8 +13,9 @@ const depSchema = new mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:'Employees',
         required: true
-    }]
+    }]       
 },{timestamps: true})
 
 const Department = mongoose.model("Department", depSchema);
+
 module.exports = Department;

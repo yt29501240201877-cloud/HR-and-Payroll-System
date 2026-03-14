@@ -1,20 +1,27 @@
 const Employees = require("../Models/Employees");
 const mongoose = require('mongoose');
+const {empSchema} = require("./Validation/empValidation")
 
 const addemployee = async(req,res) => {
     try {
-        const {FirstName,LastName,Email,Phone,HireDate,Jobtitle,BasicSalary,Status} = req.body
-        
-        if (!FirstName||!LastName||!Email||!Phone||!HireDate||!Jobtitle||!BasicSalary||!Status) {
-            return res.status(400).json({msg:"Missing Data"})
-        }
-        const existEmp = await Employees.findOne({Email})
 
-        if (existEmp) {
-            return res.status(400).json({msg:"Employee aleardy exist"})
-        }
-        const emp = await Employees.create({FirstName,LastName,Email,Phone,HireDate,Jobtitle,BasicSalary,Status})
-        res.status(201).json({msg:"Employess Created Successfully", emp})
+      const {error, value} = empSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+      const {FirstName,LastName,Email,Phone,HireDate,Jobtitle,BasicSalary,Status,Departement} = value
+
+      if(error){
+        return res.status(400).json({msg: error.details.map(err => err.message)})
+      }
+      
+      const existEmp = await Employees.findOne({Email})
+
+      if (existEmp) {
+        return res.status(400).json({msg:"Employee aleardy exist"})
+      }
+      
+      const emp = await Employees.create({FirstName,LastName,Email,Phone,HireDate,Jobtitle,BasicSalary,Status,Departement})
+
+      res.status(201).json({msg:"Employess Created Successfully", emp})
 
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message });

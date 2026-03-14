@@ -1,4 +1,4 @@
-const { required } = require("joi")
+const { required, number } = require("joi")
 const mongoose = require("mongoose")
 
 const attendSchema = new mongoose.Schema({
@@ -19,13 +19,13 @@ const attendSchema = new mongoose.Schema({
         required: true
     },
     WorkingHours:{
-        type: Date,
+        type: Number,
     },
     LateHours:{
-        type: Date,
+        type: Number,
     },
     OvertimeHours:{
-        type: Date
+        type: Number
     },
     Employee:{
         type: mongoose.Schema.ObjectId,

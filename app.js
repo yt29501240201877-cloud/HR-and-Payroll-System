@@ -26,12 +26,16 @@ const employeeRoute = require('./Routes/employeesRoute');
 const usersRoute = require('./Routes/usersRoute');
 const attendRoute = require("./Routes/attendRoute")
 const leaveRoute = require("./Routes/leavestypeRoute")
+const allowRoute = require("./Routes/allowRoute")
+const deducRoute = require("./Routes/deductionRoute")
 
 app.use('/departments',DepRoute);
 app.use('/employees',employeeRoute);
 app.use('/users',usersRoute);
 app.use('/attendance',attendRoute);
 app.use('/leaves', leaveRoute);
+app.use('/allowances', allowRoute);
+app.use('/deduction', deducRoute);
 
 
 app.listen(PORT,()=>{

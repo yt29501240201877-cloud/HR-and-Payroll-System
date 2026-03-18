@@ -2,18 +2,24 @@ const Department = require("../Models/Departement")
 const Employee = require("../Models/Employees")
 const mongoose = require('mongoose');
 const JWT = require("jsonwebtoken")
+const {depSchema} = require("./Validation/depValidation")
 
 const adddepartment = async (req,res) => {
   try {
-    const {DepartmentName,Description,Employee} = req.body;
 
-    if (!DepartmentName) return res.status(400).json({msg:"Missing Data"})
+    const {error, value} = depSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+    const {DepartmentName,Description} = value;
+
+    if(error){
+      return res.status(400).json({msg: error.details.map(err => err.message)})
+    }
 
     const existDep = await Department.findOne({DepartmentName});
 
     if (existDep) return res.status(400).json({msg:"Department aleardy exist"});
 
-    const dep = await Department.create({DepartmentName,Description,Employee:req.body.Employee})
+    const dep = await Department.create({DepartmentName,Description})
 
     res.status(201).json({msg:"Department Created Successfully", dep})
   } catch (error) {

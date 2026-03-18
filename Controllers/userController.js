@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 const Users = require("../Models/Users")
 const JWT = require("jsonwebtoken")
-const userSchema = require("./Validation/Validation")
+const userSchema = require("./Validation/authValidation")
 
 
 const updaterole = async (req,res) => {
     try {
-
-      const {error, value} = userSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
 
       const { id } = req.params;
       const { Role } = req.body;

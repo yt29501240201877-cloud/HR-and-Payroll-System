@@ -2,12 +2,18 @@ const LeavesType = require("../Models/LeavesType")
 const Leaves = require("../Models/Leaves")
 const Employees = require("../Models/Employees")
 const mongoose = require("mongoose")
+const {leavetypeSchema, leaveSchema} = require("./Validation/leaveValidation")
 
 const addleave = async (req, res) => {
     try {
-        const {TypeName, MaxDaysPerYear} = req.body
 
-        if(!TypeName || !MaxDaysPerYear) return res.status(400).json({msg: "Missing Data"});
+        const {error, value} = leavetypeSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+        const {TypeName, MaxDaysPerYear} = value
+
+        if(error){
+            return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
         const leaves = await LeavesType.create({TypeName, MaxDaysPerYear})
 
@@ -67,9 +73,13 @@ const deleteleave = async (req,res) => {
 const applyforleave = async (req, res) => {
      try {
 
-        const {Employee, Type, Amount, IsRecurring} = req.body
-        
-        if(!Employee || !Type || !Amount || !IsRecurring) return res.status(400).json({msg: "Invalid Data"})
+        const {error, value} = leaveSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+        const {Employee, Type, Amount, IsRecurring} = value
+
+        if(error){
+            return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
         const existemp = await Employees.findById(Employee)
 
@@ -99,4 +109,57 @@ const getallEmpleave = async (req, res) => {
     }    
 }
 
-module.exports = {addleave, getleave, updateleave, deleteleave, applyforleave, getallEmpleave}
+const getempleaves = async (req, res) => {
+    try {
+        const {id} = req.params
+
+        if(!id) return res.status(400).json({msg: "ID is required"})
+
+        const record = await Leaves.find({Employee : id})
+
+        if(!record) return res.status(404).json({msg: "Records not Found"})
+
+        res.status(200).json({msg: "Employee Records Retrieved", record})
+
+    } catch (error) {
+        res.status(500).json({msg: "Server Error",error: error.message})
+    }
+}
+
+const approveleave = async (req, res) => {
+    try {
+        const { id } = req.params
+        const updateData = req.body;
+
+        if (!Object.keys(updateData).length) return res.status(400).json({ msg: "No data provided for update" });
+        
+        const updatedItem = await Leaves.findByIdAndUpdate(id,updateData,{new: true});
+
+        if (!updatedItem) return res.status(404).json({ msg: "Leave not found" });
+
+        res.status(200).json({msg: "Leave updated successfully",updatedItem});
+
+    } catch (error) {
+        res.status(500).json({ msg: "Server Error", error: error.message });
+    }
+}
+
+const rejectleave = async (req, res) => {
+    try {
+        const { id } = req.params
+        const updateData = req.body;
+
+        if (!Object.keys(updateData).length) return res.status(400).json({ msg: "No data provided for update" });
+        
+        const updatedItem = await Leaves.findByIdAndUpdate(id,updateData,{new: true});
+
+        if (!updatedItem) return res.status(404).json({ msg: "Leave not found" });
+
+        res.status(200).json({msg: "Leave updated successfully",updatedItem});
+
+    } catch (error) {
+        res.status(500).json({ msg: "Server Error", error: error.message });
+    }
+}
+
+module.exports = {addleave, getleave, updateleave, deleteleave, applyforleave, getallEmpleave, getempleaves, approveleave, rejectleave}

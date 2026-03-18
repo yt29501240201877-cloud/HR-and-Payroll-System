@@ -1,20 +1,26 @@
 const mongoose = require("mongoose")
 const Attendance = require("../Models/Attendance")
+const {checkinSchema, checkoutSchema} = require("./Validation/attendValidation")
 
 const checkin = async (req, res) => {
     try {
-       const { Id, Status } = req.body;
 
-        if (!Id) return res.status(400).json({ msg: "Employee ID required" });
+        const {error, value} = checkinSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+        const { Employee, Status } = value;
+
+        if(error){
+        return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
         const today = new Date();
         today.setHours(0,0,0,0);
 
-        const CheckedEmp = await Attendance.findOne({ Employee: Id, Date: { $gte: today }});
+        const CheckedEmp = await Attendance.findOne({ Employee: Employee, Date: { $gte: today }});
 
         if (CheckedEmp) return res.status(400).json({ msg: "Employee already checked in today" });
             
-        const attendance = await Attendance.create({Employee: Id, CheckInTime: new Date(), Date: new Date(), Status});
+        const attendance = await Attendance.create({Employee: Employee, CheckInTime: new Date(), Date: new Date(), Status});
 
         res.status(201).json({ msg: "Check-in successful", attendance });
 
@@ -25,14 +31,19 @@ const checkin = async (req, res) => {
 
 const checkout = async (req, res) => {
     try {
-        const { Id } = req.body;
 
-        if (!Id) return res.status(400).json({ msg: "Employee ID required" });
+        const {error, value} = checkoutSchema.validate(req.body, {abortEarly: false, stripUnknown: true})
+
+        const { Employee } = value;
+
+        if(error){
+        return res.status(400).json({msg: error.details.map(err => err.message)})
+        }
 
         const today = new Date();
         today.setHours(0,0,0,0);
 
-        const attendance = await Attendance.findOne({Employee: Id, Date: { $gte: today }});
+        const attendance = await Attendance.findOne({Employee: Employee, Date: { $gte: today }});
         
         if (!attendance) return res.status(404).json({ msg: "Employee has not checked in today" });
 

@@ -55,7 +55,7 @@ const login = async (req, res) => {
 
         const token = JWT.sign({id:user._id, role: user.Role}, process.env.JWT_SECRET, {expiresIn: "1d"})
 
-        res.status(200).json({msg: "Success Login", token, user})
+        res.status(200).json({msg: "Success Login", token})
 
         user.token = token
         

@@ -30,7 +30,7 @@ const addemployee = async(req,res) => {
 
 const getemployee = async (req,res) => {
     try {
-        const emp = await Employees.find();
+        const emp = await Employees.find().populate('Departement');
         res.status(200).json({msg:"All Employees Retrived", emp})
     } catch (error) {
         res.status(500).json({ msg: "Server Error", error: error.message }); 

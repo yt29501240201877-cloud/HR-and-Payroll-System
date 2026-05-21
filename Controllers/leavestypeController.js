@@ -100,7 +100,11 @@ const applyforleave = async (req, res) => {
 
 const getallEmpleave = async (req, res) => {
     try {
+<<<<<<< HEAD
         const leaves = await Leaves.find().populate("Employee").populate("Type")
+=======
+        const leaves = await Leaves.find()
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
 
         res.status(200).json({msg:"All Leaves Retrived", leaves})
 

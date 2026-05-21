@@ -62,7 +62,11 @@ const checkout = async (req, res) => {
 
 const getallrecords = async (req, res) => {
     try {
+<<<<<<< HEAD
         const attend = await Attendance.find().populate('Employee');
+=======
+        const attend = await Attendance.find();
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
 
         res.status(200).json({msg: "All Records Retrieved", attend})
 

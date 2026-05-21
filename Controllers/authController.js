@@ -53,7 +53,11 @@ const login = async (req, res) => {
 
         if(!matchpass) return res.status(400).json({msg: "Invalid Password"})
 
+<<<<<<< HEAD
         const token = JWT.sign({id:user._id, role: user.Role}, process.env.JWT_SECRET, {expiresIn: "1d", algorithm: "HS256"})
+=======
+        const token = JWT.sign({id:user._id, role: user.Role}, process.env.JWT_SECRET, {expiresIn: "1d"})
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
 
         res.status(200).json({msg: "Success Login", token, user})
 

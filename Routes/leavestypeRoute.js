@@ -13,7 +13,11 @@ router.get("/", authenticate,authorize("HR Manager"), getleave)
 router.put("/:id", authenticate,authorize("HR Manager"), updateleave)
 router.delete("/:id", authenticate,authorize("HR Manager"), deleteleave)
 
+<<<<<<< HEAD
 router.post("/leaverequest", authenticate, applyforleave)
+=======
+router.post("/leaverequest", authenticate, authorize("HR Manager"), applyforleave)
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
 router.get("/allleaves", authenticate,authorize("HR Manager"), getallEmpleave)
 router.get("/employee/:id", authenticate,authorize("HR Manager"), getempleaves)
 router.patch("/:id/approve", authenticate,authorize("HR Manager"), approveleave)

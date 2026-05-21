@@ -30,10 +30,17 @@ const addemployee = async(req,res) => {
 
 const getemployee = async (req,res) => {
     try {
+<<<<<<< HEAD
       const emp = await Employees.find().populate('Departement');
       res.status(200).json({msg:"All Employees Retrived", emp})
     } catch (error) {
       res.status(500).json({ msg: "Server Error", error: error.message }); 
+=======
+        const emp = await Employees.find().populate('Departement');
+        res.status(200).json({msg:"All Employees Retrived", emp})
+    } catch (error) {
+        res.status(500).json({ msg: "Server Error", error: error.message }); 
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
     }
 }
 
@@ -50,7 +57,11 @@ const getemployeeById = async (req, res) => {
       return res.status(400).json({ msg: "Invalid ID" });
     }
 
+<<<<<<< HEAD
     const data = await Employees.findById(id).populate('Departement');
+=======
+    const data = await Employees.findById(id);
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
 
     if (!data) {
       return res.status(404).json({ msg: "Employee not found" });
@@ -173,4 +184,8 @@ const searchEmployee = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 module.exports = {addemployee, getemployee, getemployeeById, deleteEmployee, updateEmployee, EmployeeStatus, searchEmployee}
+=======
+module.exports = {addemployee, getemployee, getemployeeById, deleteEmployee, updateEmployee, EmployeeStatus, searchEmployee}
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a

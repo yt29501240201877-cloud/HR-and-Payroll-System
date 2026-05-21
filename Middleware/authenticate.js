@@ -11,7 +11,11 @@ const authenticate = (req, res, next) => {
 
         const token = authHeader.split(" ")[1];
 
+<<<<<<< HEAD
         const decoded = JWT.verify(token,process.env.JWT_SECRET, {algorithms:"HS256"});
+=======
+        const decoded = JWT.verify(token, process.env.JWT_SECRET);
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
 
         req.user = decoded;
         

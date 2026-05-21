@@ -37,16 +37,27 @@ const employeeSchema = new mongoose.Schema({
     },
     Status:{
         type: String,
+<<<<<<< HEAD
         enum: ["Active","Inactive"],
+=======
+        enum: ["Active","Diactive"],
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
         default: "Active"
     },
     Departement:[{
         type:mongoose.Schema.ObjectId,
         ref:'Departement',
+<<<<<<< HEAD
         required: false
+=======
+        required: true
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
     }]
 },{timestamps: true});
 
 const Employees = mongoose.model("Employees", employeeSchema);
+<<<<<<< HEAD
 
+=======
+>>>>>>> e1feb8a550e99c562ec7cacb8457a28f79216e7a
 module.exports = Employees;
